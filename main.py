@@ -11,7 +11,7 @@ def get_column_indexes(country):
 	return c_index
 
 
-with open('hlth_ehis_fv7e.tsv') as csv_file:
+with open('data.tsv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter='\t')
 	
 	#create variable holding all data to loop over multiple types,

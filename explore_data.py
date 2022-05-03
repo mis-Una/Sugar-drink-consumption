@@ -1,7 +1,7 @@
 import csv
 from itertools import islice
 
-with open('hlth_ehis_fv7e.tsv') as csv_file:
+with open('data.tsv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter='\t')
 
 	headers = next(csv_reader)
@@ -23,4 +23,4 @@ with open('hlth_ehis_fv7e.tsv') as csv_file:
 
 	
 #Now we have better understanding of the data file
-#and we can clean and group data.
+#and we can clean and visualize data.
