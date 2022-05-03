@@ -12,6 +12,6 @@ P.S. This is my very first project in Python. :)
 ----------------
 * File requirements.txt includes list of packages used in this project
 * Data file is included in the repo
-* Use explore_data.py to get data overview and country codes to be used in the main.py (if you want to explore countries other than the one already provided in the main.py)
+* Use explore_data.py to get data overview and country codes to be used in the main.py (if you want to explore countries other than the ones already provided in the main.py)
 * Use main.py to visualize data and change countries to be included in the charts.
 
