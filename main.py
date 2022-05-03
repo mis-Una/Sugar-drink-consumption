@@ -14,11 +14,11 @@ def get_column_indexes(country):
 with open('data.tsv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter='\t')
 	
-	#create variable holding all data to loop over multiple types,
+	#creates variable holding all data to loop over multiple types,
 	#since csv.reader can loop only once
 	data = list(csv_reader)
 
-	#remove trailing spaces and special characters from data
+	#removes trailing spaces and special characters from data
 	clean_data = []
 	for row in data:
 		row = [col.replace(':', '') for col in row]
@@ -27,19 +27,23 @@ with open('data.tsv') as csv_file:
 		row = [col.strip() for col in row]
 		clean_data.append(row)
 
-	#get indexes for the necessary columns
+	#gets indexes for the necessary columns
+	#country codes here can be changes to any other 3 countries
+	#EU27 is meant as comparitive baseline and should not be changed
 	country_1 = get_column_indexes('LV')
 	country_2 = get_column_indexes('LT')
 	country_3 = get_column_indexes('EE')
 	EU27 = get_column_indexes('EU27_2020')
 
-	#set names for selected countries
+	#sets names for selected countries
+	#needs to be changed, if contry codes in line 32-34 were changed
 	c1 = 'Latvia'
 	c2 = 'Lithuania'
 	c3 = 'Estonia'
 
-	#get totals for each country
-	answer_categories = ['1-3x a week', '4-6x a week', 'Once a day or more', 'Never or occasionaly']
+	#get totals for each country / creates list of data for each country
+	answer_categories = ['1-3x a week', '4-6x a week', 'Once a day or more',
+						 'Never or occasionaly']
 	country_data = {} #dict is requared to create horizontal stacked bar chart
 	c1_all = []
 	c2_all = []
@@ -51,14 +55,13 @@ with open('data.tsv') as csv_file:
 			c2_all.append(float(row[country_2]))
 			c3_all.append(float(row[country_3]))
 			eu27_all.append(float(row[EU27]))
-	# first 3 dict keys need to be changes acording to the chosen countries
-	# here data are selected for LV, LT and EST
+	
 	country_data.update({f'{c1}': c1_all}) 
 	country_data.update({f'{c2}': c2_all})
 	country_data.update({f'{c3}': c3_all})
 	country_data.update({'EU_27': eu27_all})
 
-	#get data by gender for each country 
+	#get data by gender for each country / creates list o data for each category
 	men_c1, women_c1 = [], []
 	men_c2, women_c2 = [], []
 	men_c3, women_c3 = [], []
@@ -75,7 +78,7 @@ with open('data.tsv') as csv_file:
 			women_c3.append(float(row[country_3]))
 			women_eu27.append(float(row[EU27]))
 
-	#get data by education for each country
+	#get data by education for each country / creates list of data for each category
 	ed_02_c1, ed_34_c1, ed_58_c1 = [], [], []
 	ed_02_c2, ed_34_c2, ed_58_c2 = [], [], []
 	ed_02_c3, ed_34_c3, ed_58_c3 = [], [], []
@@ -97,7 +100,7 @@ with open('data.tsv') as csv_file:
 			ed_58_c3.append(float(row[country_3]))
 			ed_58_eu27.append(float(row[EU27]))
 
-	#get data by age for each country
+	#get data by age for each country / creates list of data for each category
 	y15_24c1, y25_34c1, y35_44c1, y45_54c1, y55_64c1, y65_morec1 = [], [], [], [], [], []
 	y15_24c2, y25_34c2, y35_44c2, y45_54c2, y55_64c2, y65_morec2 = [], [], [], [], [], []
 	y15_24c3, y25_34c3, y35_44c3, y45_54c3, y55_64c3, y65_morec3 = [], [], [], [], [], []
@@ -161,7 +164,8 @@ charts.survey(ax, country_data, answer_categories)
 
 #formatting the 1st chart
 plt.title("Sugar Drink Consumption", y=1.1, fontdict=title_font)
-fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font, ha='center', va='center')
+fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font,
+		 ha='center', va='center')
 plt.ylabel('', fontdict=y_font)
 
 
@@ -181,10 +185,13 @@ charts.data_by_gender(plot4, answer_categories, men_eu27, women_eu27, "EU27")
 plt.setp(plot2.get_yticklabels(), visible=False)
 plt.setp(plot3.get_yticklabels(), visible=False)
 plt.setp(plot4.get_yticklabels(), visible=False)
-plt.suptitle("Sugar Drink Consumption by Gender", fontname='Calibri', fontsize=18, fontweight='bold', color='#333230' )
-fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font, ha='center', va='center')
+plt.suptitle("Sugar Drink Consumption by Gender", fontname='Calibri',
+			 fontsize=18, fontweight='bold', color='#333230' )
+fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font,
+		 ha='center', va='center')
 handles, labels = plot4.get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(0.12, -0.01), ncol=3, fontsize=12)
+fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(0.12, -0.01),
+		   ncol=3, fontsize=12)
 
 
 #plotting data for the 3rd chart
@@ -193,19 +200,26 @@ plot1 = fig.add_subplot(gs[0, 0])
 plot2 = fig.add_subplot(gs[0, 1], sharey=plot1)
 plot3 = fig.add_subplot(gs[0, 2], sharey=plot1)
 plot4 = fig.add_subplot(gs[0, 3], sharey=plot1)
-charts.data_by_education(plot1, answer_categories, ed_02_c1, ed_34_c1, ed_58_c1, f"{c1}" )
-charts.data_by_education(plot2, answer_categories, ed_02_c2, ed_34_c2, ed_58_c2, f"{c2}" )
-charts.data_by_education(plot3, answer_categories, ed_02_c3, ed_34_c3, ed_58_c3, f"{c3}" )
-charts.data_by_education(plot4, answer_categories, ed_02_eu27, ed_34_eu27, ed_58_eu27, "EU27" )
+charts.data_by_education(plot1, answer_categories, ed_02_c1, ed_34_c1,
+						 ed_58_c1, f"{c1}" )
+charts.data_by_education(plot2, answer_categories, ed_02_c2, ed_34_c2,
+						 ed_58_c2, f"{c2}" )
+charts.data_by_education(plot3, answer_categories, ed_02_c3, ed_34_c3,
+						 ed_58_c3, f"{c3}" )
+charts.data_by_education(plot4, answer_categories, ed_02_eu27, ed_34_eu27,
+	 					 ed_58_eu27, "EU27" )
 
 #formatting the 3rd chart
 plt.setp(plot2.get_yticklabels(), visible=False)
 plt.setp(plot3.get_yticklabels(), visible=False)
 plt.setp(plot4.get_yticklabels(), visible=False)
-fig.suptitle('Sugar Drink Consumption by Education', fontname='Calibri', fontsize=18, fontweight='bold', color='#333230')
-fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font, ha='center', va='center')
+fig.suptitle('Sugar Drink Consumption by Education', fontname='Calibri',
+			 fontsize=18, fontweight='bold', color='#333230')
+fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font,
+		 ha='center', va='center')
 handles, labels = plot4.get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(0.12, -0.01), ncol=3, fontsize=12)
+fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(0.12, -0.01),
+		  ncol=3, fontsize=12)
 
 
 #plotting the 4th chart
@@ -214,10 +228,14 @@ plot1 = fig.add_subplot(gs[0, 0], sharey=plot1)
 plot2 = fig.add_subplot(gs[0, 1], sharey=plot1)
 plot3 = fig.add_subplot(gs[0, 2], sharey=plot1)
 plot4 = fig.add_subplot(gs[0, 3], sharey=plot1)
-charts.data_by_age(plot1, answer_categories, y15_24c1, y25_34c1, y35_44c1, y45_54c1, y55_64c1, y65_morec1, f'{c1}')
-charts.data_by_age(plot2, answer_categories, y15_24c2, y25_34c2, y35_44c2, y45_54c2, y55_64c2, y65_morec2, f'{c2}')
-charts.data_by_age(plot3, answer_categories, y15_24c3, y25_34c3, y35_44c3, y45_54c3, y55_64c3, y65_morec3, f'{c3}')
-charts.data_by_age(plot4, answer_categories, y15_24eu27, y25_34eu27, y35_44eu27, y45_54eu27, y55_64eu27, y65_moreeu27, 'EU27')
+charts.data_by_age(plot1, answer_categories, y15_24c1, y25_34c1, y35_44c1,
+				   y45_54c1, y55_64c1, y65_morec1, f'{c1}')
+charts.data_by_age(plot2, answer_categories, y15_24c2, y25_34c2, y35_44c2,
+				   y45_54c2, y55_64c2, y65_morec2, f'{c2}')
+charts.data_by_age(plot3, answer_categories, y15_24c3, y25_34c3, y35_44c3,
+				   y45_54c3, y55_64c3, y65_morec3, f'{c3}')
+charts.data_by_age(plot4, answer_categories, y15_24eu27, y25_34eu27, y35_44eu27,
+				   y45_54eu27, y55_64eu27, y65_moreeu27, 'EU27')
 
 #formating the 4th chart
 plt.setp(plot2.get_yticklabels(), visible=False)
@@ -225,9 +243,12 @@ plt.setp(plot3.get_yticklabels(), visible=False)
 plt.setp(plot4.get_yticklabels(), visible=False)
 
 handles, labels = plot4.get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(0.12, -0.01), ncol=6, fontsize=12)
-fig.suptitle('Sugar Drink Consumption by Age', fontname='Calibri', fontsize=18, fontweight='bold', color='#333230')
-fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font, ha='center', va='center') 
+fig.legend(handles, labels, loc='lower left', bbox_to_anchor=(0.12, -0.01),
+		   ncol=6, fontsize=12)
+fig.suptitle('Sugar Drink Consumption by Age', fontname='Calibri', fontsize=18,
+			 fontweight='bold', color='#333230')
+fig.text(s='Frequency of consumption, %', x=0.5, y=0.93, fontdict=subtitle_font,
+		 ha='center', va='center') 
 
 plt.show()
 
